@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Factor FP&amp;A</title>
+<link rel="icon" href="assets/brand/symbol-orange.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="topbar">
+  <img src="assets/brand/logo.svg" alt="Factor">
+  <button class="btn" id="nav-toggle" aria-label="Abrir menu">Menu</button>
+</div>
+<div class="shell">
+  <aside class="sidebar" aria-label="Navegação principal">
+    <a class="brand" href="#/visao-geral">
+      <img src="assets/brand/logo.svg" alt="Factor">
+      <span class="brand-area">Central de FP&amp;A</span>
+    </a>
+    <nav class="nav">
+      <a href="#/visao-geral" data-route="visao-geral"><span class="num">01</span>Visão geral</a>
+      <a href="#/dash" data-route="dash"><span class="num">02</span>Dash Finance</a>
+      <a href="#/margem" data-route="margem"><span class="num">03</span>Margem por projeto</a>
+      <a href="#/reports" data-route="reports"><span class="num">04</span>Reports</a>
+      <a href="#/forecast" data-route="forecast"><span class="num">05</span>Forecast</a>
+      <a href="#/orcamento" data-route="orcamento"><span class="num">06</span>Orçamento <span class="badge badge--muted soon">em breve</span></a>
+    </nav>
+    <div class="sidebar-foot">
+      <div>Confidencial. Uso interno.</div>
+      <div>Dados: <strong id="foot-snapshot">carregando</strong></div>
+    </div>
+  </aside>
+
+  <main class="content" id="main">
+    <section class="page" data-page="visao-geral" hidden></section>
+
+    <section class="page" data-page="dash" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">02 Dash Finance</p>
+          <h1 id="dash-title">Revenue</h1>
+          
+        </div>
+        <span class="badge" id="snapshot-badge">Snapshot <span id="snapshot-date">n/d</span></span>
+      </header>
+      <nav class="subnav" id="dash-subnav">
+        <a href="#/dash/revenue" data-tab="revenue">Revenue</a>
+        <a href="#/dash/cashflow" data-tab="cashflow">Cashflow</a>
+        <a href="#/dash/budget" data-tab="budget">Real vs Budget <span id="budget-year-label">2026</span></a>
+        <a href="#/dash/headcount" data-tab="headcount">Headcount</a>
+        <a href="#/dash/dre" data-tab="dre">DRE Gerencial</a>
+        <a href="#/dash/kpis" data-tab="kpis">KPIs</a>
+        <a href="#/dash/forecast" data-tab="forecast">Forecast base</a>
+      </nav>
+      <div id="dash-status"></div>
+      <div class="legacy" id="legacy-root">
+          <div id="tab-revenue" class="tab-content active">
+            <div class="page-title">Revenue</div>
+            <div class="page-sub">Receita recorrente, evolução do MRR e composição da base de clientes</div>
+            <div class="row-title">Gross Revenue</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month · últimos 12 meses</div><div class="chart-wrap"><canvas id="c-gr-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter · últimos 4 trimestres</div><div class="chart-wrap"><canvas id="c-gr-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year · histórico anual</div><div class="chart-wrap"><canvas id="c-gr-y"></canvas></div></div>
+            </div>
+            <div class="row-title">MRR, Inicial vs Final</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-mrr-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-mrr-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-mrr-y"></canvas></div></div>
+            </div>
+            <div class="row-title">MRR Evolution, Decomposição</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-mev-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-mev-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-mev-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Clientes</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-cli-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-cli-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-cli-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Product Representative % (EGM vs E2E vs Services)</div>
+            <div class="double-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-rep-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-rep-q"></canvas></div></div>
+            </div>
+            <div class="row-title">LTM &amp; Ticket Médio</div>
+            <div class="double-grid">
+              <div class="card"><div class="card-mini-title">LTM (meses)</div><div class="chart-wrap"><canvas id="c-ltm"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ticket Médio</div><div class="chart-wrap"><canvas id="c-ticket"></canvas></div></div>
+            </div>
+          </div>
+          <div id="tab-cashflow" class="tab-content">
+            <div class="page-title">Cashflow</div>
+            <div class="page-sub">Posição de caixa, queima, recebimentos e prazo médio</div>
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Prazo Médio Recebimentos</div>
+                <div class="kpi-value" id="kpi-recv">—</div>
+                <div class="kpi-unit">dias</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Prazo Médio Pagamentos</div>
+                <div class="kpi-value" id="kpi-pay">—</div>
+                <div class="kpi-unit">dias</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Net, Prazo Médio Caixa</div>
+                <div class="kpi-value" id="kpi-net">—</div>
+                <div class="kpi-unit">dias</div>
+              </div>
+            </div>
+            <div class="row-title">Saldo de Caixa</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-cash-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-cash-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-cash-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Burn (Operacional &amp; Total)</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-burn-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-burn-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-burn-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Recebimentos e Pagamentos</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-recpag-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-recpag-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-recpag-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Rendimentos &amp; Runway</div>
+            <div class="double-grid">
+              <div class="card"><div class="card-mini-title">Rendimento de Aplicações</div><div class="chart-wrap"><canvas id="c-rend"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Runway (meses)</div><div class="chart-wrap"><canvas id="c-runway"></canvas></div></div>
+            </div>
+          </div>
+          <div id="tab-budget" class="tab-content">
+            <div class="page-title">Real vs Budget <span id="budget-year-title">2026</span></div>
+            <div class="page-sub">Confronto entre realizado (meses fechados do ano corrente) e budget completo · Mês / YTD / Ano</div>
+            <div class="row-title">Receita</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-rec-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-rec-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-rec-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Take Rate R$</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-tr-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-tr-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-tr-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Take Rate %</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-trp-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-trp-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-trp-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Gross Margin R$</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-gm-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-gm-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-gm-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Gross Margin %</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-gmp-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-gmp-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-gmp-y"></canvas></div></div>
+            </div>
+            <div class="row-title">EBITDA R$</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-ebitda-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-ebitda-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-ebitda-y"></canvas></div></div>
+            </div>
+            <div class="row-title">EBITDA %</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-ebitdap-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-ebitdap-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-ebitdap-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Resultado R$</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-res-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-res-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-res-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Resultado %</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-resp-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-resp-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-resp-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Burn</div>
+            <div class="triple-grid equal">
+              <div class="card"><div class="card-mini-title">Month, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-burn-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">YTD, Real vs Budget</div><div class="chart-wrap"><canvas id="c-bud-burn-ytd"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Ano, Real YTD vs Budget Total</div><div class="chart-wrap"><canvas id="c-bud-burn-y"></canvas></div></div>
+            </div>
+          </div>
+          <div id="tab-headcount" class="tab-content">
+            <div class="page-title">Headcount</div>
+            <div class="page-sub">Evolução do time, custo por centro de custo e eficiência (ARR/HC)</div>
+            <div class="row-title">Headcount Total &amp; ARR/Headcount</div>
+            <div class="double-grid">
+              <div class="card"><div class="card-mini-title">Headcount Total</div><div class="chart-wrap"><canvas id="c-hc-total"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">ARR / Headcount</div><div class="chart-wrap"><canvas id="c-arr-hc"></canvas></div></div>
+            </div>
+            <div class="row-title">Remuneração Total por Centro de Custo</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap tall"><canvas id="c-rem-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap tall"><canvas id="c-rem-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap tall"><canvas id="c-rem-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Headcount por Centro de Custo</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap tall"><canvas id="c-hcc-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap tall"><canvas id="c-hcc-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap tall"><canvas id="c-hcc-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Headcount Direto e Indireto</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-hcdi-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-hcdi-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-hcdi-y"></canvas></div></div>
+            </div>
+            <div class="row-title">ARR por Headcount Direto</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-arrhcd-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-arrhcd-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-arrhcd-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Gross Margin por Headcount Direto</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-gmhcd-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-gmhcd-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-gmhcd-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Proporção Área × Receita Líquida (%), YTD ano corrente</div>
+            <div class="single-grid">
+              <div class="card"><div class="card-mini-title">Custo de Pessoal / Receita Líquida (%)</div><div class="chart-wrap xtall"><canvas id="c-prop"></canvas></div></div>
+      
+            <div class="row-title">Custo por Colaborador, VSEP26</div>
+            <div class="card" style="padding:12px 16px">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
+                <label style="font-size:11px;font-weight:600;color:var(--ink-soft)">Custo/Despesa:</label>
+                <select id="hc-f-cd" style="font-size:11px;padding:3px 7px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;outline:none">
+                  <option value="">Todos</option>
+                  <option value="Custo">Custo</option>
+                  <option value="Despesa">Despesa</option>
+                  <option value="Despesa-Labs">Despesa-Labs</option>
+                </select>
+                <label style="font-size:11px;font-weight:600;color:var(--ink-soft)">Interno/PROlancer:</label>
+                <select id="hc-f-ip" style="font-size:11px;padding:3px 7px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;outline:none">
+                  <option value="">Todos</option>
+                  <option value="Interno">Interno</option>
+                  <option value="Prolancer">PROlancer</option>
+                  <option value="Despesa-Labs">Despesa-Labs</option>
+                </select>
+                <label style="font-size:11px;font-weight:600;color:var(--ink-soft)">Tipo:</label>
+                <select id="hc-f-tipo" style="font-size:11px;padding:3px 7px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;outline:none">
+                  <option value="">Todos</option>
+                  <option value="CLT">CLT</option>
+                  <option value="PJ">PJ</option>
+                  <option value="ProLabore">ProLabore</option>
+                </select>
+                <span id="hc-count" style="font-size:11px;color:var(--ink-mute);margin-left:6px"></span>
+                <span id="hc-total-label" style="font-size:11px;font-weight:700;color:var(--blue-dark)"></span>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table" id="hc-pessoal-table">
+                  <thead><tr>
+                    <th style="text-align:left;min-width:180px">Colaborador</th>
+                    <th style="text-align:left;min-width:130px">Cargo / Função</th>
+                    <th>Tipo</th>
+                    <th>Int./PRO</th>
+                    <th>Custo/Desp.</th>
+                    <th>Sal. Bruto</th>
+                    <th>INSS Pat. 20%</th>
+                    <th>RAT×FAP 1%</th>
+                    <th>Terceiros 5,8%</th>
+                    <th>FGTS 8%</th>
+                    <th>Prov. 13º 8,33%</th>
+                    <th>Prov. Férias 11,11%</th>
+                    <th>INSS/13º 1,67%</th>
+                    <th>INSS/Fér. 2,22%</th>
+                    <th>FGTS/13º 0,67%</th>
+                    <th>FGTS/Fér. 0,89%</th>
+                    <th>Tot. Encargos</th>
+                    <th>V. Alimentação</th>
+                    <th>Plano Saúde</th>
+                    <th>Sindicato</th>
+                    <th style="color:var(--blue-dark);background:#ddeaf5">Custo Total p/ Empresa</th>
+                    <th>% do Total</th>
+                  </tr></thead>
+                  <tbody id="hc-pessoal-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div id="tab-dre" class="tab-content">
+            <div class="page-title">DRE Gerencial</div>
+            <div class="page-sub">Janela: últimos 12 meses (Month) · últimos 5 trimestres (Quarter) · ano anterior vs ano corrente YTD (Year)</div>
+            <div class="table-wrap">
+              <table class="data-table" id="dre-table">
+                <thead id="dre-thead"></thead>
+                <tbody id="dre-tbody"></tbody>
+              </table>
+            </div>
+            <div class="row-title">Take Rate</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-dre-tr-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-dre-tr-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-dre-tr-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Margem Bruta</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-dre-gm-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-dre-gm-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-dre-gm-y"></canvas></div></div>
+            </div>
+            <div class="row-title">EBITDA</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-dre-ebitda-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-dre-ebitda-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-dre-ebitda-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Receita, Custos e Despesas</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-dre-rcd-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-dre-rcd-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-dre-rcd-y"></canvas></div></div>
+            </div>
+            <div class="row-title">Resultado (Lucro Líquido)</div>
+            <div class="triple-grid">
+              <div class="card"><div class="card-mini-title">Month</div><div class="chart-wrap"><canvas id="c-dre-ll-m"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Quarter</div><div class="chart-wrap"><canvas id="c-dre-ll-q"></canvas></div></div>
+              <div class="card"><div class="card-mini-title">Year</div><div class="chart-wrap"><canvas id="c-dre-ll-y"></canvas></div></div>
+            </div>
+          </div>
+          <div id="tab-kpis" class="tab-content">
+            <div class="page-title">KPIs <span id="kpis-year-title">2026</span></div>
+            <div class="page-sub">Realizado · Month (jan-dez) · Quarter (Q1-Q4) · Ano (YTD)</div>
+            <div class="table-wrap">
+              <table class="data-table" id="kpi-table">
+                <thead id="kpi-thead"></thead>
+                <tbody id="kpi-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tab-forecast" class="tab-content">
+            <div class="page-title">Forecast <span id="forecast-year-title">2026</span></div>
+            <div class="page-sub">Jan-ago realizado · Set-dez projetado (Receita: linha "Previsão receita" · Custos/Despesas: repete agosto · Caixa: média do burn realizado · Rendimento: 0,7% sobre o saldo do mês anterior)</div>
+            <div class="row-title">DRE</div>
+            <div class="table-wrap">
+              <table class="data-table" id="forecast-dre-table">
+                <thead id="forecast-dre-thead"></thead>
+                <tbody id="forecast-dre-tbody"></tbody>
+              </table>
+            </div>
+            <div class="row-title">Cashflow</div>
+            <div class="table-wrap">
+              <table class="data-table" id="forecast-cash-table">
+                <thead id="forecast-cash-thead"></thead>
+                <tbody id="forecast-cash-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="margem" hidden></section>
+    <section class="page" data-page="reports" hidden></section>
+    <section class="page" data-page="forecast" hidden></section>
+    <section class="page" data-page="orcamento" hidden></section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/core.js"></script>
+<script src="js/dash.js"></script>
+<script src="js/home.js"></script>
+<script src="js/margem.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/forecast.js"></script>
+<script src="js/orcamento.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+/* ============================================================================
+   Factor Design System - Tokens
+   Derivado de projects/operating-system/design-system/factor-design-system
+   (app/globals.css) e do brand book (source/idv-guidelines.md).
+
+   Os valores oklch abaixo sao a conversao exata dos hex oficiais da marca.
+   Round-trip verificado: oklch -> sRGB devolve o hex de origem sem desvio.
+   ============================================================================ */
+
+/* --- Paleta de marca: valor fixo, nao muda com o tema -------------------- */
+:root {
+  /* Primaria */
+  --factor-off-white: #F7F7ED;            /* oklch(0.9734 0.0132 106.64) */
+  --factor-black: #000000;                /* oklch(0.0000 0.0000 0.00) */
+  --factor-orange: #FF7100;               /* oklch(0.7103 0.1960 47.16) */
+  /* Secundaria */
+  --factor-malva: #3C1B26;                /* oklch(0.2731 0.0537 0.06) */
+  --factor-cinza: #AEAEAE;                /* oklch(0.7508 0.0000 89.88) */
+  --factor-rosa: #E3CDCD;                 /* oklch(0.8665 0.0247 17.64) */
+  --factor-bege: #FFE1BD;                 /* oklch(0.9255 0.0576 72.09) */
+}
+
+/* --- Tokens semanticos: tema claro (padrao) ------------------------------ */
+:root {
+  --background:            var(--factor-off-white);
+  --foreground:            var(--factor-black);
+  --card:                  #FFFFFF;
+  --card-foreground:       var(--factor-black);
+  --primary:               var(--factor-orange);
+  /* Texto sobre laranja: PRETO. Off White sobre #FF7100 da 2.56:1 e reprova
+     em AA. Preto da 7.61:1. Ver references/acessibilidade.md */
+  --primary-foreground:    var(--factor-black);
+  /* Laranja para TEXTO em fundo claro. #FF7100 sobre Off White da 2.56:1 e
+     reprova ate para texto grande. Este e o mesmo matiz e croma, escurecido
+     ate 4.61:1. Use em rotulo, eyebrow, numero de secao, link. */
+  --primary-text:          #CA3F00;
+  --secondary:             #ECECE1;
+  --secondary-foreground:  #2E2E2E;
+  --muted:                 #EFEFE4;
+  --muted-foreground:      #636363;
+  --subtle:                #F2F2E8;
+  --border:                #E4E4DA;
+  --border-strong:         #CFCFC5;
+  --ring:                  var(--factor-orange);
+  --destructive:           #C4231C;
+  --success:               #2F7D4F;
+
+  /* Grafico: laranja, malva, rosa, bege, cinza */
+  --chart-1: var(--factor-orange);
+  --chart-2: var(--factor-malva);
+  --chart-3: var(--factor-rosa);
+  --chart-4: var(--factor-bege);
+  --chart-5: var(--factor-cinza);
+
+  /* Raio: base 0.375rem, igual ao design system */
+  --radius:    0.375rem;
+  --radius-sm: 0.125rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+
+  /* Tipografia */
+  --font-display: 'GT America Extended', 'Zalando Sans SemiExpanded', system-ui, sans-serif;
+  --font-sans:    'TASA Orbiter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Geist Mono', ui-monospace, monospace;
+
+  /* Modulo X do brand book: altura do simbolo. Margem e area de protecao
+     saem daqui. Nao inventar espacamento fora desta escala. */
+  --x:    2rem;
+  --x-2:  1rem;
+  --x-4:  0.5rem;
+  --x2:   4rem;
+  --x3:   6rem;
+}
+
+/* --- Tokens semanticos: tema escuro -------------------------------------- */
+:root[data-theme="dark"] {
+  --background:            #0A0A08;
+  --foreground:            #EFEFE4;
+  --card:                  #151513;
+  --card-foreground:       #EFEFE4;
+  --primary:               var(--factor-orange);
+  --primary-foreground:    #17130F;
+  --secondary:             #201F1B;
+  --secondary-foreground:  #E4E4DA;
+  --muted:                 #201F1B;
+  --muted-foreground:      #96958D;
+  --subtle:                #171714;
+  --border:                #33322D;
+  --border-strong:         #4A4942;
+  --destructive:           #F0736C;
+  --success:               #6FCF97;
+  /* No escuro o laranja puro ja da 7.18:1: nao precisa escurecer */
+  --primary-text:          var(--factor-orange);
+  --primary-foreground:    var(--factor-black);
+
+  --chart-3: #E3CDCD;
+  --chart-4: #FFE1BD;
+  --chart-5: #7A7972;
+}
