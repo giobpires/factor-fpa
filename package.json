@@ -1,0 +1,11 @@
+{
+  "name": "factor-fpa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync-bigquery": "node scripts/sync-bigquery.js"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.9.0"
+  }
+}

@@ -1,0 +1,31 @@
+name: Sync BigQuery -> data/plataforma.json
+
+on:
+  schedule:
+    # 09:10 America/Sao_Paulo (UTC-3) -> 12:10 UTC, todo dia
+    - cron: '10 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --omit=dev
+      - run: node scripts/sync-bigquery.js
+        env:
+          GCP_SERVICE_ACCOUNT_B64: ${{ secrets.GCP_SERVICE_ACCOUNT_B64 }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/plataforma.json
+          git diff --staged --quiet || git commit -m "Atualiza metricas da plataforma (BigQuery)"
+          git push

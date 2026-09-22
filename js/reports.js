@@ -5,7 +5,7 @@
   const TEMPLATE = 'templates/astella-template.xlsx';
   const MES_ABREV = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   const EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  let K = null, mrr = null, take = null, refIdx = null, templateBuf = null, templateName = 'template padrão (Update Ago26)';
+  let K = null, mrr = null, take = null, plat = null, refIdx = null, templateBuf = null, templateName = 'template padrão (Update Ago26)';
 
   const loadScript = src => new Promise((res, rej) => {
     if (document.querySelector(`script[src="${src}"]`)) {
@@ -211,6 +211,16 @@
     return pct ? v / 100 : v;
   };
 
+  // Metricas da plataforma (BigQuery, via data/plataforma.json): ultimo registro do mes
+  function platRows(mo, isCurrent) {
+    const snaps = (plat && plat.snapshots) || [];
+    const pref = `${mo.y}-${String(mo.m).padStart(2, '0')}`;
+    const inMonth = snaps.filter(x => x.date.startsWith(pref));
+    const snap = inMonth.length ? inMonth[inMonth.length - 1] : (isCurrent && snaps.length ? snaps[snaps.length - 1] : null);
+    const mk = (key) => ({ v: snap ? snap[key] : null, f: 'i', src: snap ? 'auto' : 'manual', note: snap ? `BigQuery, ${snap.date.split('-').reverse().join('/')}` : 'BigQuery (sem registro no mês)' });
+    return { platCadastros: mk('cadastros'), platPql: mk('pql'), platDev: mk('developers'), platDesign: mk('designers'), platProduto: mk('produto') };
+  }
+
   function rpCompute(i) {
     const mo = K.months[i];
     const ps = mrr ? FPA.projectStats(mrr, mo.y, mo.m) : null;
@@ -230,8 +240,9 @@
       novosCli: { v: K.novosCli[i] ?? 0, f: 'i', src: 'auto' },
       novosProj: { v: ps ? ps.novos : null, f: 'i', src: 'auto', note: '1ª competência na base de MRR' },
       clientes: { v: K.cliFin[i], f: 'i', src: 'auto' },
-      projetos: { v: ps ? ps.ativos : null, f: 'i', src: 'conferir', note: 'projetos distintos com receita na base de MRR' },
+      projetos: { v: ps ? ps.ativos : null, f: 'i', src: 'auto', note: 'projetos com receita no mês na base de MRR' },
       prolAtivos: { v: prolAtivos, f: 'i', src: prolAtivos === null ? 'manual' : 'conferir', note: 'prolancers distintos na planilha de take rate' },
+      ...platRows(mo, isCurrent),
     };
   }
   // Linha da planilha -> chave calculada (as demais sao manuais)
@@ -239,6 +250,7 @@
     [/^Net Revenue/i, 'net'], [/Growth \(MoM\)/i, 'mom'], [/Growth \(YoY\)/i, 'yoy'], [/^Gross Profit/i, 'gp'], [/^% Gross Margin/i, 'gm'],
     [/^Ebitda \(R\$/i, 'ebitda'], [/^Ebitda \(%\)/i, 'ebitdaPct'], [/Novos Clientes/i, 'novosCli'], [/Novos Projetos/i, 'novosProj'],
     [/# Clientes/i, 'clientes'], [/# Projetos/i, 'projetos'], [/Prolancers ativos/i, 'prolAtivos'],
+    [/Prolancers total/i, 'platCadastros'], [/Prolancers qualified/i, 'platPql'], [/# Developer/i, 'platDev'], [/# Design/i, 'platDesign'], [/# Product/i, 'platProduto'],
   ];
   const fmtRp = (v, f) => {
     if (v === null || v === undefined) return '';
@@ -304,7 +316,8 @@
         <dl class="kv">
           <dt>Formato</dt><dd>Google Sheets, uma coluna por mês</dd>
           <dt>Automático</dt><dd>Receita, margem, EBITDA, clientes e projetos (BASE KLIP e base de MRR)</dd>
-          <dt>Manual</dt><dd>NPS e números de prolancers da plataforma</dd>
+          <dt>BigQuery</dt><dd>Cadastros, qualificados, developers, design e produto, atualizados todo dia${plat && plat.snapshots && plat.snapshots.length ? ' (último: ' + plat.snapshots[plat.snapshots.length - 1].date.split('-').reverse().join('/') + ')' : ' (aguardando a primeira execução)'}</dd>
+          <dt>Manual</dt><dd>NPS de clientes e de prolancers</dd>
           <dt>Método conferido</dt><dd>${ok} de ${tot} linhas automáticas batem com o que está na planilha em ${prev.label}</dd>
         </dl>
         <div class="controls">
@@ -367,6 +380,7 @@
         K = await FPA.klip();
         try { mrr = await FPA.mrrBD(); } catch (e) { console.warn(e); }
         try { take = await FPA.takeRate(); } catch (e) { console.warn(e); }
+        try { const r = await fetch('data/plataforma.json', { cache: 'no-store' }); if (r.ok) plat = await r.json(); } catch (e) { console.warn(e); }
         refIdx = K.closedIdx;
         render(root);
         root.dataset.ready = '1';

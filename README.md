@@ -38,3 +38,20 @@ e abrir http://127.0.0.1:8765
 
 `assets/tokens.css`, `assets/fonts.css` e `assets/brand/` vêm do brand skill da Factor (2026-08-06).
 Cor sempre por token. Laranja pinta, não escreve: texto laranja usa `--primary-text`.
+
+## Métricas da plataforma (BigQuery)
+
+`.github/workflows/sync-bigquery.yml` roda todo dia às 09:10 (Brasília) as consultas em
+`bossabox-data.bossabox_platform_trusted.users` e grava os totais em `data/plataforma.json`
+(cadastros, PQL, developers, designers, POs/PMs). O report Redpoint lê esse arquivo.
+
+Configuração (uma vez), em Settings > Secrets and variables > Actions:
+
+| Secret | Valor |
+|---|---|
+| `GCP_SERVICE_ACCOUNT_B64` | JSON da service account, inteiro, em base64 |
+| `GCP_PROJECT_ID` | projeto onde as consultas rodam (ex.: `bossabox-data`) |
+
+A service account precisa dos papéis **BigQuery Job User** e **BigQuery Data Viewer** no
+projeto `bossabox-data`. Base64 no PowerShell:
+`[Convert]::ToBase64String([IO.File]::ReadAllBytes(".\chave.json"))`

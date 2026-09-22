@@ -14,7 +14,7 @@ FPA.SOURCES = {
   takeRate:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwYmzvB-ZNqpOLts3kkjAj09dGMAitP_17oUxHr_RwtTq66NlJRovdeg8mgsTikqjsfdRzI7sYbK1R/pub?gid=1862891390&single=true&output=csv',
   // Report Redpoint (Google Sheets)
   redpoint:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSCltwSos9jjzrgsFZ-sHEtPswWmvwLRrb-BN4Ewh0kZppPLQEJ7Uf-7T96SQcVZHIRXBRr8ssW57u/pub?gid=1959416167&single=true&output=csv',
-  redpointView: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSCltwSos9jjzrgsFZ-sHEtPswWmvwLRrb-BN4Ewh0kZppPLQEJ7Uf-7T96SQcVZHIRXBRr8ssW57u/pubhtml?gid=1959416167&single=true',
+  redpointView: 'https://docs.google.com/spreadsheets/d/1O7-OrBJfZ9XopVu9ZPVMER4VUFPFOIypOK_hGgRnbvQ/edit',
 };
 
 // Deducao da receita bruta para liquida (impostos sobre faturamento)
@@ -184,7 +184,8 @@ FPA.mrrBD = function () {
   return _mrr;
 };
 
-// Projetos ativos e novos projetos por mes (usado no report Redpoint e na Visao geral)
+// Projetos ativos = nomes de projeto distintos com receita (competencia) no mes.
+// Novos projetos = projetos cuja primeira receita cai no mes.
 FPA.projectStats = function (mrr, y, m) {
   const key = p => p.toUpperCase();
   const first = {};

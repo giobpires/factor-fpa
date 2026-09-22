@@ -1,5 +1,9 @@
 {
+  "installCommand": "echo sem instalacao",
+  "buildCommand": "",
+  "outputDirectory": ".",
   "headers": [
-    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
   ]
 }
